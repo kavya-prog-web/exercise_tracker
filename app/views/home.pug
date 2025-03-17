@@ -1,0 +1,41 @@
+doctype html
+html
+  head
+    title Exercise Tracker
+    link(rel="stylesheet", href="/home.css")
+
+include navbar
+
+block content
+  // Hero Section
+  .hero
+    .hero-content
+      h1 Track Your Workouts, Achieve Your Goals
+      p Monitor your running, walking, and cycling activities with ease.
+      a.button(href="/about") Learn More
+
+  // Services Section
+  .services
+    h2 Our Services
+
+    .service-container
+      .service
+        img(src="/images/tracking.png" alt="Tracking")
+        h3 Activity Tracking
+        p Log your running, walking, and cycling workouts in real-time.
+
+      .service
+        img(src="/images/analytics.png" alt="Analytics")
+        h3 Performance Analytics
+        p View detailed charts and insights on your fitness progress.
+
+      .service
+        img(src="/images/goals.png" alt="Goal Setting")
+        h3 Goal Setting
+        p Set fitness targets and stay motivated to achieve them.
+
+      .service
+        img(src="/images/community.png" alt="Community Support")
+        h3 Community Support
+        p Connect with other fitness enthusiasts and share your progress.
+
