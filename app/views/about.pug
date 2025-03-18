@@ -1,0 +1,67 @@
+doctype html
+html
+  head
+    title Exercise Tracker
+    link(rel="stylesheet", href="/about.css")
+include navbar
+
+block content
+  // About Us Hero Section
+  .about-hero
+    .hero-content
+      h1 About Exercise Tracker
+      p Your ultimate fitness companion to track, analyze, and achieve your fitness goals.
+
+  // Our Mission Section
+  .mission
+    h2 Our Mission
+    p We aim to make fitness tracking effortless and effective by providing real-time insights, personalized goal setting, and data-driven progress analysis.
+  
+  // Why Choose Us Section
+  .why-choose
+    h2 Why Choose Us?
+    .choose-container
+      .choose-box
+        img(src="/images/easy-interface.png" alt="Easy Interface")
+        h3 Easy to Use Interface
+        p Our intuitive UI makes logging workouts and setting goals simple.
+      
+      .choose-box
+        img(src="/images/real-time-analysis.png" alt="Real-Time Analysis")
+        h3 Real-Time Analysis
+        p Get instant performance insights and track your progress effectively.
+      
+      .choose-box
+        img(src="/images/data-visualization.png" alt="Data Visualization")
+        h3 Data Visualization
+        p View charts, summaries, and reports for a clear fitness journey.
+      
+      .choose-box
+        img(src="/images/community.png" alt="Community Support")
+        h3 Community Support
+        p Engage with a supportive community to stay motivated and inspired.
+
+  // Meet Our Team Section
+  .team
+    h2 Meet Our Team
+    .team-container
+      .team-member
+        img(src="/images/team1.jpg" alt="Team Member 1")
+        h3 Alex Johnson
+        p Founder & Fitness Enthusiast
+      
+      .team-member
+        img(src="/images/team2.jpg" alt="Team Member 2")
+        h3 Emily Smith
+        p Data Analyst & Health Coach
+      
+      .team-member
+        img(src="/images/team3.jpg" alt="Team Member 3")
+        h3 Michael Lee
+        p Software Engineer & Developer
+
+  // Call to Action
+  .cta
+    h2 Ready to Track Your Fitness?
+    p Join Exercise Tracker today and take control of your health journey.
+    a.button(href="/contact") Get Started

@@ -1,0 +1,116 @@
+/* About Hero Section */
+.about-hero {
+    background: url('9762170.jpg') center/cover no-repeat;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero-content h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.hero-content p {
+    font-size: 1.2em;
+}
+
+/* Mission Section */
+.mission {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f4f4f4;
+}
+
+.mission h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+/* Why Choose Us Section */
+.why-choose {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.choose-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.choose-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    text-align: center;
+}
+
+.choose-box img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+}
+
+.choose-box h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+/* Meet Our Team Section */
+.team {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f4f4f4;
+}
+
+.team-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.team-member {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    text-align: center;
+}
+
+.team-member img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+/* Call to Action */
+.cta {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f4a261;
+    color: white;
+}
+
+.cta .button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: white;
+    color: #f4a261;
+    text-decoration: none;
+    font-size: 1.2em;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.cta .button:hover {
+    background-color: #e76f51;
+    color: white;
+}
