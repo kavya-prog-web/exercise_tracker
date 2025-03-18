@@ -1,7 +1,7 @@
 /* About Hero Section */
 .about-hero {
-    background: url('9762170.jpg') center/cover no-repeat;
-    color: white;
+    background: url('about.jpg') center/cover no-repeat;
+    color: green;
     text-align: center;
     padding: 100px 20px;
 }
