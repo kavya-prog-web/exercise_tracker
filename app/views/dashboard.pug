@@ -3,12 +3,30 @@ html
   head
     title Fitness Records Dashboard
     link(rel="stylesheet", href="/dashboard.css")
-
+  
   body
     include navbar
 
     .container
-      h1 Fitness Records Dashboard
+      h1 Fitness Records
+
+      // Search and filter form
+      form(method="get", action="/dashboard")
+        .filters
+          // Search bar
+          input(type="text", name="search", placeholder="Search by activity type", value=search)
+          // Activity type filter dropdown
+          select(name="activity_type")
+            option(value="") All Activities
+            option(value="Running", selected=activity_type === "Running") Running
+            option(value="Walking", selected=activity_type === "Walking") Walking
+            option(value="Cycling", selected=activity_type === "Cycling") Cycling
+          // Duration filter range
+          input(type="number", name="min_duration", placeholder="Min Duration", value=min_duration)
+          input(type="number", name="max_duration", placeholder="Max Duration", value=max_duration)
+          button(type="submit") Apply Filters
+
+      // Display records table
       table
         thead
           tr

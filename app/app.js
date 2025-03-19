@@ -32,14 +32,37 @@ app.get("/contact", function(req, res) {
 });
 
 app.get("/dashboard", function (req, res) {
-    let sql = "SELECT * FROM fitness_records";
-    
+    let { activity_type, min_duration, max_duration, search } = req.query;
+    let sql = "SELECT * FROM fitness_records WHERE 1=1";  // Start with a basic query
+
+    // Filter by activity type if provided
+    if (activity_type) {
+        sql += ` AND activity_type = '${activity_type}'`;
+    }
+
+    // Filter by duration if provided
+    if (min_duration) {
+        sql += ` AND duration >= ${min_duration}`;
+    }
+    if (max_duration) {
+        sql += ` AND duration <= ${max_duration}`;
+    }
+
+    // Search for activities based on user input
+    if (search) {
+        sql += ` AND activity_type LIKE '%${search}%'`;
+    }
+
     db.query(sql)
         .then(results => {
-            res.render("dashboard", { records: results }); // Pass records to Pug template
+            res.render("dashboard", { records: results, search, activity_type, min_duration, max_duration });
         })
-
+        .catch(err => {
+            console.error("Database error:", err);
+            res.status(500).send("Internal Server Error");
+        });
 });
+
 
 
 // Start server on port 3000
