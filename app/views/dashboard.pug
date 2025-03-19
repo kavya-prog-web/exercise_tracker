@@ -1,51 +1,48 @@
 doctype html
 html
-  head
-    title Fitness Records Dashboard
-    link(rel="stylesheet", href="/dashboard.css")
-  
-  body
-    include navbar
+    head
+        title Fitness Records Dashboard
+        link(rel="stylesheet" href="/dashboard.css")
 
-    .container
-      h1 Fitness Records
+    body
+        include navbar
 
-      // Search and filter form
-      form(method="get", action="/dashboard")
-        .filters
-          // Search bar
-          input(type="text", name="search", placeholder="Search by activity type", value=search)
-          // Activity type filter dropdown
-          select(name="activity_type")
-            option(value="") All Activities
-            option(value="Running", selected=activity_type === "Running") Running
-            option(value="Walking", selected=activity_type === "Walking") Walking
-            option(value="Cycling", selected=activity_type === "Cycling") Cycling
-          // Duration filter range
-          input(type="number", name="min_duration", placeholder="Min Duration", value=min_duration)
-          input(type="number", name="max_duration", placeholder="Max Duration", value=max_duration)
-          button(type="submit") Apply Filters
+        .container
+            h1 Fitness Records
 
-      // Display records table
-      table
-        thead
-          tr
-            th Record ID
-            th Activity Type
-            th Duration (min)
-            th Distance (km)
-            th Calories Burned
-            th Heart Rate (BPM)
-            th Steps
-            th Recorded At
-        tbody
-          each record in records
-            tr
-              td= record.record_id
-              td= record.activity_type
-              td= record.duration
-              td= record.distance || 'N/A'
-              td= record.calories_burned || 'N/A'
-              td= record.heart_rate || 'N/A'
-              td= record.steps || 'N/A'
-              td= new Date(record.recorded_at).toLocaleString()
+            // Search and filter form
+            form(method="get" action="/dashboard")
+                .filters
+                    // Search bar
+                    input(type="text" name="search" placeholder="Search by activity type", value=search)
+                    // Activity type filter dropdown
+                    select(name="activity_type")
+                        option(value="") All Activities
+                        option(value="Running", selected=activity_type === "Running") Running
+                        option(value="Walking", selected=activity_type === "Walking") Walking
+                        option(value="Cycling", selected=activity_type === "Cycling") Cycling
+                    // Duration filter range
+                    input(type="number" name="min_duration" placeholder="Min Duration", value=min_duration)
+                    input(type="number" name="max_duration" placeholder="Max Duration", value=max_duration)
+                    button(type="submit") Apply Filters
+
+            // Display records table
+            table
+                thead
+                    tr
+                        th Record ID
+                        th Activity Type
+                        th Duration (min)
+                        th Distance (km)
+                        th Recorded At
+                        th Actions
+                tbody
+                    each record in records
+                        tr
+                        td= record.record_id
+                        td= record.activity_type
+                        td= record.duration
+                        td= record.distance || 'N/A'
+                        td= new Date(record.recorded_at).toLocaleString()
+                        td
+                            a.button(href=`/fitness/${record.record_id}`) View Details

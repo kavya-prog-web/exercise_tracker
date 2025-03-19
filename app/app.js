@@ -64,6 +64,25 @@ app.get("/dashboard", function (req, res) {
 });
 
 
+// Route to display detailed fitness record
+app.get("/fitness/:id", function(req, res) {
+    const recordId = req.params.id;
+    let sql = "SELECT * FROM fitness_records WHERE record_id = ?";
+    
+    db.query(sql, [recordId])
+        .then(results => {
+            if (results.length > 0) {
+                res.render("fitness_details", { record: results[0] });
+            } else {
+                res.status(404).send("Record not found");
+            }
+        })
+        .catch(err => {
+            console.error("Database error:", err);
+            res.status(500).send("Internal Server Error");
+        });
+});
+
 
 // Start server on port 3000
 app.listen(3000,function(){

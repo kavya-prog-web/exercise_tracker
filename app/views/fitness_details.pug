@@ -1,0 +1,46 @@
+doctype html
+html
+  head
+    title Fitness Record Details
+    link(rel="stylesheet", href="/dashboard.css")
+  body
+    include navbar
+
+    .container
+      h1 Fitness Record Details
+
+      .record-details
+        p
+          strong Record ID: 
+          span= record.record_id
+        
+        p
+          strong Activity Type: 
+          span= record.activity_type
+        
+        p
+          strong Duration: 
+          span= record.duration + " minutes"
+        
+        p
+          strong Distance: 
+          span= record.distance || 'N/A'
+        
+        p
+          strong Calories Burned: 
+          span= record.calories_burned || 'N/A'
+        
+        p
+          strong Heart Rate: 
+          span= record.heart_rate || 'N/A'
+        
+        p
+          strong Steps: 
+          span= record.steps || 'N/A'
+        
+        p
+          strong Recorded At: 
+          span= new Date(record.recorded_at).toLocaleString()
+
+      // Button to go back to the dashboard
+      a.button(href="/dashboard") Back to Dashboard
