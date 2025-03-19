@@ -1,0 +1,33 @@
+doctype html
+html
+  head
+    title Fitness Records Dashboard
+    link(rel="stylesheet", href="/dashboard.css")
+
+  body
+    include navbar
+
+    .container
+      h1 Fitness Records Dashboard
+      table
+        thead
+          tr
+            th Record ID
+            th Activity Type
+            th Duration (min)
+            th Distance (km)
+            th Calories Burned
+            th Heart Rate (BPM)
+            th Steps
+            th Recorded At
+        tbody
+          each record in records
+            tr
+              td= record.record_id
+              td= record.activity_type
+              td= record.duration
+              td= record.distance || 'N/A'
+              td= record.calories_burned || 'N/A'
+              td= record.heart_rate || 'N/A'
+              td= record.steps || 'N/A'
+              td= new Date(record.recorded_at).toLocaleString()
