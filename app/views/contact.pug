@@ -16,7 +16,13 @@ html
       h2 Get in Touch
       p Fill out the form below and we’ll get back to you as soon as possible.
 
-      form(action="/send-message" method="POST")
+      // Display success or error messages
+      if successMessage
+        p.success-message #{successMessage}
+      if errorMessage
+        p.error-message #{errorMessage}
+
+      form(action="/contact" method="POST")
         .form-group
           label(for="name") Your Name
           input(type="text" id="name" name="name" required placeholder="Enter your name")

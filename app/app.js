@@ -204,6 +204,26 @@ app.get("/fitness/:id", function(req, res) {
         });
 });
 
+// contact us route
+app.post("/contact", async function (req, res) {
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+        return res.render("contact", { errorMessage: "All fields are required." });
+    }
+
+    const sql = "INSERT INTO contact_us (name, email, message) VALUES (?, ?, ?)";
+
+    try {
+        await db.query(sql, [name, email, message]);
+        res.render("contact", { successMessage: "Message sent successfully!" });
+    } catch (err) {
+        console.error("Error inserting contact message:", err);
+        res.render("contact", { errorMessage: "There was a problem sending your message." });
+    }
+});
+
+
 
 // Start server on port 3000
 app.listen(3000,function(){

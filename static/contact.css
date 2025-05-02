@@ -84,3 +84,16 @@ button:hover {
 .info-item p {
     font-size: 1.2em;
 }
+
+
+.success-message {
+    color: green;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  
+  .error-message {
+    color: red;
+    margin: 10px 0;
+    font-weight: bold;
+  }
