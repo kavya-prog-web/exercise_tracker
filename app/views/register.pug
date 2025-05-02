@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title Register - Exercise Tracker
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/navbar.css")
+    link(rel="stylesheet", href="/auth.css")
+  body
+    include navbar
+
+    .auth-page
+      .auth-container
+        h1 Register
+
+        //— show success / error from your route
+        if successMessage
+          p.success-message= successMessage
+        if errorMessage
+          p.error-message= errorMessage
+
+        form(method="POST", action="/userregistration")
+          .form-group
+            label(for="email") Email
+            input#email(type="email", name="email", placeholder="Email", required)
+
+          .form-group
+            label(for="password") Password
+            input#password(type="password", name="password", placeholder="Password", required)
+
+          button(type="submit") Register
+
+        p.link
+          | Already have an account?
+          a(href="/login") Login here

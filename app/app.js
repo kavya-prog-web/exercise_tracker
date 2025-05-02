@@ -130,36 +130,71 @@ app.post('/set-password', async function (req, res) {
         console.error(`Error while adding password `, err.message);
     }
 });
+
 app.get("/dashboard", function (req, res) {
-    let { activity_type, min_duration, max_duration, search } = req.query;
-    let sql = "SELECT * FROM fitness_records WHERE 1=1";  // Start with a basic query
+    if (!req.session.uid) return res.redirect("/login");
 
-    // Filter by activity type if provided
+    const { activity_type, min_duration, max_duration, search } = req.query;
+    let sql = "SELECT * FROM fitness_records WHERE user_id = ?";
+    const values = [req.session.uid];
+
     if (activity_type) {
-        sql += ` AND activity_type = '${activity_type}'`;
+        sql += " AND activity_type = ?";
+        values.push(activity_type);
     }
-
-    // Filter by duration if provided
     if (min_duration) {
-        sql += ` AND duration >= ${min_duration}`;
+        sql += " AND duration >= ?";
+        values.push(min_duration);
     }
     if (max_duration) {
-        sql += ` AND duration <= ${max_duration}`;
+        sql += " AND duration <= ?";
+        values.push(max_duration);
     }
-
-    // Search for activities based on user input
     if (search) {
-        sql += ` AND activity_type LIKE '%${search}%'`;
+        sql += " AND activity_type LIKE ?";
+        values.push(`%${search}%`);
     }
 
-    db.query(sql)
+    db.query(sql, values)
         .then(results => {
-            res.render("dashboard", { records: results, search, activity_type, min_duration, max_duration });
+            res.render("dashboard", {
+                records: results,
+                search,
+                activity_type,
+                min_duration,
+                max_duration
+            });
         })
         .catch(err => {
             console.error("Database error:", err);
             res.status(500).send("Internal Server Error");
         });
+});
+
+app.post("/fitness/add", async (req, res) => {
+    if (!req.session.uid) return res.redirect("/login");
+
+    const { activity_type, duration, distance, calories_burned, heart_rate, steps } = req.body;
+    const sql = `
+        INSERT INTO fitness_records 
+        (user_id, activity_type, duration, distance, calories_burned, heart_rate, steps) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+    try {
+        await db.query(sql, [
+            req.session.uid,
+            activity_type,
+            duration,
+            distance || null,
+            calories_burned || null,
+            heart_rate || null,
+            steps || null
+        ]);
+        res.redirect("/dashboard");
+    } catch (err) {
+        console.error("Error inserting fitness record:", err);
+        res.status(500).send("Failed to add record");
+    }
 });
 
 

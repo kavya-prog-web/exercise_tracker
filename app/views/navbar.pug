@@ -2,14 +2,20 @@ doctype html
 html
   head
     title Exercise Tracker
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel="stylesheet", href="/navbar.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
   body
-    nav
-      .logo Exercise Tracker
+    nav.navbar
+      .logo
+        a(href="/") Exercise Tracker
+
       ul.nav-links
         li: a(href="/") Home
         li: a(href="/about") About Us
         li: a(href="/contact") Contact Us
         li: a(href="/dashboard") Dashboard
-
-
+        if !loggedIn
+          li: a(href="/login") Login
+        else
+          li: a(href="/logout") Logout
