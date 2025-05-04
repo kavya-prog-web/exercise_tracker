@@ -11,11 +11,17 @@ html
         a(href="/") Exercise Tracker
 
       ul.nav-links
-        li: a(href="/") Home
-        li: a(href="/about") About Us
-        li: a(href="/contact") Contact Us
-        li: a(href="/dashboard") Dashboard
-        if !loggedIn
-          li: a(href="/login") Login
+        if loggedIn
+          li
+            a(href="/dashboard")
+              i.fas.fa-tachometer-alt
+              |  Dashboard
+          li
+            a(href="/logout")
+              i.fas.fa-sign-out-alt
+              |  Logout
         else
-          li: a(href="/logout") Logout
+          li: a(href="/") Home
+          li: a(href="/about") About Us
+          li: a(href="/contact") Contact Us
+          li: a(href="/login") Login

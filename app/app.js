@@ -77,7 +77,7 @@ app.post('/authenticate', async function (req, res) {
         req.session.uid = uId;
         req.session.loggedIn = true;
         console.log(req.session.id);
-        res.redirect('/admin-dashboard');
+        res.redirect('/dashboard');
     } catch (err) {
         console.error(`Error while authenticating user:`, err.message);
         res.status(500).send('Internal Server Error');
@@ -200,15 +200,15 @@ app.post("/fitness/add", async (req, res) => {
 
 // create User api
 app.post('/userregistration', async (req, res) => {
-    const { username, email, password, fullname, dob, gender } = req.body;
+    const { email, password} = req.body;
 
     try {
         // Hash the password using bcrypt
         const hashedPassword = await bcrypt.hash(password, 10);
         
         // Prepare SQL query
-        const sql = 'INSERT INTO Users(username, email, password, fullname, dob, gender) VALUES (?, ?, ?, ?, ?, ?)';
-        const values = [username, email, hashedPassword, fullname, dob, gender];
+        const sql = 'INSERT INTO Users(email, password) VALUES (?, ?)';
+        const values = [email, hashedPassword];
         // Execute SQL query
         await db.query(sql, values);
 
