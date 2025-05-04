@@ -287,6 +287,67 @@ app.post("/contact", async function (req, res) {
     }
 });
 
+// Render edit form
+app.get("/fitness/edit/:id", async (req, res) => {
+    if (!req.session.uid) return res.redirect("/login");
+  
+    const recordId = req.params.id;
+    const sql = "SELECT * FROM fitness_records WHERE record_id = ? AND user_id = ?";
+    try {
+      const results = await db.query(sql, [recordId, req.session.uid]);
+      if (!results.length) return res.status(404).send("Not found");
+      res.render("fitness_edit", { record: results[0] });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Server error");
+    }
+  });
+  
+  // Handle edit submission
+  app.post("/fitness/edit/:id", async (req, res) => {
+    if (!req.session.uid) return res.redirect("/login");
+  
+    const recordId = req.params.id;
+    const { activity_type, duration, distance, calories_burned, heart_rate, steps } = req.body;
+    const sql = `
+      UPDATE fitness_records
+         SET activity_type = ?, duration = ?, distance = ?, calories_burned = ?, heart_rate = ?, steps = ?
+       WHERE record_id = ? AND user_id = ?
+    `;
+    try {
+      await db.query(sql, [
+        activity_type,
+        duration,
+        distance || null,
+        calories_burned || null,
+        heart_rate || null,
+        steps || null,
+        recordId,
+        req.session.uid
+      ]);
+      res.redirect("/dashboard");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Failed to update");
+    }
+  });
+  
+  // Handle deletion
+  app.post("/fitness/delete/:id", async (req, res) => {
+    if (!req.session.uid) return res.redirect("/login");
+  
+    const recordId = req.params.id;
+    const sql = "DELETE FROM fitness_records WHERE record_id = ? AND user_id = ?";
+    try {
+      await db.query(sql, [recordId, req.session.uid]);
+      res.redirect("/dashboard");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Failed to delete");
+    }
+  });
+  
+
 
 // GET /goals  → render form + list existing goals
 app.get("/goals", async (req, res) => {
