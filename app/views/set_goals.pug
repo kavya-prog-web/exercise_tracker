@@ -1,0 +1,64 @@
+doctype html
+html
+  head
+    title Set Your Fitness Goals
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/dashboard.css")
+    link(rel="stylesheet", href="/goals.css")
+  body
+    include navbar
+
+    .container
+      h1 Set a New Goal
+
+      if successMessage
+        p.success-message= successMessage
+      if errorMessage
+        p.error-message= errorMessage
+
+      form(method="POST", action="/goals")
+        .form-group
+          label(for="goal_type") Activity Type
+          select#goal_type(name="goal_type" required)
+            option(value="") Select…
+            option(value="Running") Running
+            option(value="Walking") Walking
+            option(value="Cycling") Cycling
+
+        .form-group
+          label(for="target_value") Target Value
+          input#target_value(
+            type="number" 
+            name="target_value" 
+            step="0.01" 
+            placeholder="e.g. 100 (km)" 
+            required)
+
+        .form-group
+          label(for="end_date") End Date
+          input#end_date(type="date" name="end_date" required)
+
+        button(type="submit") Set Goal
+
+      h2 Your Current Goals
+      if goals.length
+        table
+          thead
+            tr
+              th ID
+              th Activity
+              th Target
+              th Progress
+              th Start
+              th End
+          tbody
+            each goal in goals
+              tr
+                td= goal.goal_id
+                td= goal.goal_type
+                td= goal.target_value
+                td= goal.current_value
+                td= new Date(goal.start_date).toLocaleDateString()
+                td= goal.end_date.toLocaleDateString()
+      else
+        p You have no goals yet.

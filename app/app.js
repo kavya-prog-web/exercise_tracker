@@ -22,6 +22,12 @@ const sessionMiddleware = session({
 });
 app.use(sessionMiddleware);
 
+app.use((req, res, next) => {
+    // make a boolean available in every Pug template
+    res.locals.loggedIn = !!req.session.uid;
+    next();
+  });
+
 app.use(express.static("static"));
 
 // Get the functions in the db.js file to use
@@ -131,45 +137,68 @@ app.post('/set-password', async function (req, res) {
     }
 });
 
-app.get("/dashboard", function (req, res) {
+app.get("/dashboard", async function (req, res) {
     if (!req.session.uid) return res.redirect("/login");
-
+    const uid = req.session.uid;
     const { activity_type, min_duration, max_duration, search } = req.query;
-    let sql = "SELECT * FROM fitness_records WHERE user_id = ?";
-    const values = [req.session.uid];
-
+  
+    // Build fitness_records query
+    let recordsSql = "SELECT * FROM fitness_records WHERE user_id = ?";
+    const recordsVals = [uid];
+  
     if (activity_type) {
-        sql += " AND activity_type = ?";
-        values.push(activity_type);
+      recordsSql += " AND activity_type = ?";
+      recordsVals.push(activity_type);
     }
     if (min_duration) {
-        sql += " AND duration >= ?";
-        values.push(min_duration);
+      recordsSql += " AND duration >= ?";
+      recordsVals.push(min_duration);
     }
     if (max_duration) {
-        sql += " AND duration <= ?";
-        values.push(max_duration);
+      recordsSql += " AND duration <= ?";
+      recordsVals.push(max_duration);
     }
     if (search) {
-        sql += " AND activity_type LIKE ?";
-        values.push(`%${search}%`);
+      recordsSql += " AND activity_type LIKE ?";
+      recordsVals.push(`%${search}%`);
     }
-
-    db.query(sql, values)
-        .then(results => {
-            res.render("dashboard", {
-                records: results,
-                search,
-                activity_type,
-                min_duration,
-                max_duration
-            });
-        })
-        .catch(err => {
-            console.error("Database error:", err);
-            res.status(500).send("Internal Server Error");
-        });
-});
+  
+    // Subquery to grab, per activity_type, the goal with the latest start_date
+    const goalsSql = `
+      SELECT g.goal_id, g.goal_type, g.target_value, g.current_value, g.start_date, g.end_date
+      FROM goals g
+      INNER JOIN (
+        SELECT goal_type, MAX(start_date) AS max_start
+        FROM goals
+        WHERE user_id = ?
+        GROUP BY goal_type
+      ) mg 
+        ON g.goal_type = mg.goal_type 
+       AND g.start_date = mg.max_start
+      WHERE g.user_id = ?
+    `;
+  
+    try {
+      const [records, latestGoals] = await Promise.all([
+        db.query(recordsSql, recordsVals),
+        db.query(goalsSql, [uid, uid])
+      ]);
+  
+      res.render("dashboard", {
+        records,
+        latestGoals,
+        search,
+        activity_type,
+        min_duration,
+        max_duration,
+        loggedIn: true
+      });
+    } catch (err) {
+      console.error("Database error:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+  
 
 app.post("/fitness/add", async (req, res) => {
     if (!req.session.uid) return res.redirect("/login");
@@ -258,6 +287,55 @@ app.post("/contact", async function (req, res) {
     }
 });
 
+
+// GET /goals  → render form + list existing goals
+app.get("/goals", async (req, res) => {
+    if (!req.session.uid) return res.redirect("/login");
+  
+    try {
+      const goals = await db.query(
+        "SELECT * FROM goals WHERE user_id = ? ORDER BY start_date DESC",
+        [req.session.uid]
+      );
+      res.render("set_goals", {
+        goals,
+        successMessage: req.session.successMessage,
+        errorMessage: req.session.errorMessage
+      });
+    } catch (err) {
+      console.error("DB error fetching goals:", err);
+      res.status(500).send("Internal Server Error");
+    } finally {
+      // clear flash messages
+      delete req.session.successMessage;
+      delete req.session.errorMessage;
+    }
+  });
+  
+  // POST /goals → insert a new goal
+  app.post("/goals", async (req, res) => {
+    if (!req.session.uid) return res.redirect("/login");
+  
+    const { goal_type, target_value, end_date } = req.body;
+    if (!goal_type || !target_value || !end_date) {
+      req.session.errorMessage = "All fields are required.";
+      return res.redirect("/goals");
+    }
+  
+    try {
+      await db.query(
+        "INSERT INTO goals (user_id, goal_type, target_value, end_date) VALUES (?, ?, ?, ?)",
+        [req.session.uid, goal_type, target_value, end_date]
+      );
+      req.session.successMessage = "Goal set successfully!";
+      res.redirect("/goals");
+    } catch (err) {
+      console.error("DB error inserting goal:", err);
+      req.session.errorMessage = "Failed to set goal.";
+      res.redirect("/goals");
+    }
+  });
+  
 
 
 // Start server on port 3000
