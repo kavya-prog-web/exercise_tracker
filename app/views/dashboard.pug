@@ -9,47 +9,8 @@ html
     .container
       h1 Fitness Dashboard
 
-      // Latest Goals Section
-      h2 Latest Goals
-      if latestGoals.length
-        table
-          thead
-            tr
-              th Goal ID
-              th Activity
-              th Target
-              th Progress
-              th Start Date
-              th End Date
-          tbody
-            each goal in latestGoals
-              tr
-                td= goal.goal_id
-                td= goal.goal_type
-                td= goal.target_value
-                td= goal.current_value
-                td= new Date(goal.start_date).toLocaleDateString()
-                td= new Date(goal.end_date).toLocaleDateString()
-      else
-        p You have no goals set yet.
+      // … Latest Goals & Filters …
 
-      // Divider
-      hr
-
-      // Search and filter form
-      form(method="get" action="/dashboard")
-        .filters
-          input(type="text" name="search" placeholder="Search by activity type" value=search)
-          select(name="activity_type")
-            option(value="") All Activities
-            option(value="Running", selected=activity_type==='Running') Running
-            option(value="Walking", selected=activity_type==='Walking') Walking
-            option(value="Cycling", selected=activity_type==='Cycling') Cycling
-          input(type="number" name="min_duration" placeholder="Min Duration" value=min_duration)
-          input(type="number" name="max_duration" placeholder="Max Duration" value=max_duration)
-          button(type="submit") Apply Filters
-
-      // Fitness Records Table
       h2 Recent Records
       table
         thead
@@ -69,4 +30,7 @@ html
               td= record.distance || 'N/A'
               td= new Date(record.recorded_at).toLocaleString()
               td
-                a.button(href=`/fitness/${record.record_id}`) View Details
+                a.button(href=`/fitness/${record.record_id}`) View
+                a.button(href=`/fitness/edit/${record.record_id}`) Edit
+                form.delete-form(method="POST", action=`/fitness/delete/${record.record_id}`)
+                  button(type="submit" onclick="return confirm('Delete this record?')") Delete

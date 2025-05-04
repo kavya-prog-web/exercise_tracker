@@ -1,0 +1,43 @@
+//- views/fitness_edit.pug
+doctype html
+html
+  head
+    title Edit Fitness Record
+    link(rel="stylesheet" href="/auth.css") 
+  body
+    include navbar
+
+    .auth-page
+      .auth-container
+        h1 Edit Record ##{record.record_id}
+
+        form(method="POST", action=`/fitness/edit/${record.record_id}`)
+          .form-group
+            label(for="activity_type") Activity Type
+            select#activity_type(name="activity_type" required)
+              option(value="Running", selected=record.activity_type==='Running') Running
+              option(value="Walking", selected=record.activity_type==='Walking') Walking
+              option(value="Cycling", selected=record.activity_type==='Cycling') Cycling
+
+          .form-group
+            label(for="duration") Duration (min)
+            input#duration(type="number" name="duration" value=record.duration required)
+
+          .form-group
+            label(for="distance") Distance (km)
+            input#distance(type="number" step="0.01" name="distance" value=record.distance)
+
+          .form-group
+            label(for="calories_burned") Calories Burned
+            input#calories_burned(type="number" step="0.01" name="calories_burned" value=record.calories_burned)
+
+          .form-group
+            label(for="heart_rate") Avg Heart Rate (BPM)
+            input#heart_rate(type="number" name="heart_rate" value=record.heart_rate)
+
+          .form-group
+            label(for="steps") Steps
+            input#steps(type="number" name="steps" value=record.steps)
+
+          button(type="submit") Save Changes
+        a.link(href="/dashboard") ← Back to Dashboard
